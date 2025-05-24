@@ -1,29 +1,43 @@
+import StorageService from './StorageService';
+import bcrypt from 'bcryptjs';
+
 class UserService {
   constructor() {
     this.currentUser = JSON.parse(localStorage.getItem('currentUser')) || null;
-    this.API_URL = process.env.REACT_APP_API_URL || 'http://localhost:3000/api';
   }
 
   // Register a new user
   async register(username, password) {
     try {
-      const response = await fetch(`${this.API_URL}/users/register`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ username, password }),
-      });
-
-      if (!response.ok) {
-        const error = await response.json();
-        throw new Error(error.message || 'Registration failed');
+      // Check if user already exists
+      const existingUser = await StorageService.getUser(username);
+      if (existingUser) {
+        throw new Error('Username already exists');
       }
 
-      const user = await response.json();
-      this.currentUser = user;
-      localStorage.setItem('currentUser', JSON.stringify(user));
-      return user;
+      // Hash password
+      const salt = await bcrypt.genSalt(10);
+      const hashedPassword = await bcrypt.hash(password, salt);
+
+      // Create new user
+      const user = {
+        id: Date.now().toString(),
+        username,
+        password: hashedPassword,
+        createdAt: new Date().toISOString()
+      };
+
+      // Save user
+      await StorageService.saveUser(username, user);
+
+      // Initialize empty tasks array for new user
+      await StorageService.saveUserTasks(username, []);
+
+      // Set current user
+      this.currentUser = { ...user, password: undefined };
+      localStorage.setItem('currentUser', JSON.stringify(this.currentUser));
+
+      return this.currentUser;
     } catch (error) {
       console.error('Registration error:', error);
       throw error;
@@ -33,23 +47,23 @@ class UserService {
   // Login user
   async login(username, password) {
     try {
-      const response = await fetch(`${this.API_URL}/users/login`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ username, password }),
-      });
-
-      if (!response.ok) {
-        const error = await response.json();
-        throw new Error(error.message || 'Invalid credentials');
+      // Get user
+      const user = await StorageService.getUser(username);
+      if (!user) {
+        throw new Error('Invalid credentials');
       }
 
-      const user = await response.json();
-      this.currentUser = user;
-      localStorage.setItem('currentUser', JSON.stringify(user));
-      return user;
+      // Verify password
+      const isValidPassword = await bcrypt.compare(password, user.password);
+      if (!isValidPassword) {
+        throw new Error('Invalid credentials');
+      }
+
+      // Set current user
+      this.currentUser = { ...user, password: undefined };
+      localStorage.setItem('currentUser', JSON.stringify(this.currentUser));
+
+      return this.currentUser;
     } catch (error) {
       console.error('Login error:', error);
       throw error;
@@ -65,24 +79,32 @@ class UserService {
   // Update user credentials
   async updateCredentials(username, newPassword) {
     try {
-      const response = await fetch(`${this.API_URL}/users/${this.currentUser.id}`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${this.currentUser.token}`,
-        },
-        body: JSON.stringify({ username, password: newPassword }),
-      });
-
-      if (!response.ok) {
-        const error = await response.json();
-        throw new Error(error.message || 'Update failed');
+      const user = await StorageService.getUser(username);
+      if (!user) {
+        throw new Error('User not found');
       }
 
-      const updatedUser = await response.json();
-      this.currentUser = updatedUser;
-      localStorage.setItem('currentUser', JSON.stringify(updatedUser));
-      return updatedUser;
+      // Hash new password
+      const salt = await bcrypt.genSalt(10);
+      const hashedPassword = await bcrypt.hash(newPassword, salt);
+
+      // Update user
+      const updatedUser = {
+        ...user,
+        password: hashedPassword,
+        updatedAt: new Date().toISOString()
+      };
+
+      // Save updated user
+      await StorageService.saveUser(username, updatedUser);
+
+      // Update current user if it's the logged-in user
+      if (this.currentUser && this.currentUser.username === username) {
+        this.currentUser = { ...updatedUser, password: undefined };
+        localStorage.setItem('currentUser', JSON.stringify(this.currentUser));
+      }
+
+      return this.currentUser;
     } catch (error) {
       console.error('Update error:', error);
       throw error;
@@ -101,47 +123,18 @@ class UserService {
 
   // Get user's tasks
   async getUserTasks() {
-    try {
-      const response = await fetch(`${this.API_URL}/users/${this.currentUser.id}/tasks`, {
-        headers: {
-          'Authorization': `Bearer ${this.currentUser.token}`,
-        },
-      });
-
-      if (!response.ok) {
-        const error = await response.json();
-        throw new Error(error.message || 'Failed to fetch tasks');
-      }
-
-      return await response.json();
-    } catch (error) {
-      console.error('Fetch tasks error:', error);
-      throw error;
+    if (!this.currentUser) {
+      throw new Error('User not logged in');
     }
+    return await StorageService.getUserTasks(this.currentUser.username);
   }
 
   // Save user's tasks
   async saveUserTasks(tasks) {
-    try {
-      const response = await fetch(`${this.API_URL}/users/${this.currentUser.id}/tasks`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${this.currentUser.token}`,
-        },
-        body: JSON.stringify({ tasks }),
-      });
-
-      if (!response.ok) {
-        const error = await response.json();
-        throw new Error(error.message || 'Failed to save tasks');
-      }
-
-      return await response.json();
-    } catch (error) {
-      console.error('Save tasks error:', error);
-      throw error;
+    if (!this.currentUser) {
+      throw new Error('User not logged in');
     }
+    await StorageService.saveUserTasks(this.currentUser.username, tasks);
   }
 }
 

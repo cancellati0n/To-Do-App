@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import UserService from './services/UserService';
+import NotificationService from './services/NotificationService';
 import AuthForm from './components/AuthForm';
 import TaskList from './components/TaskList';
 import TaskForm from './components/TaskForm';
@@ -36,8 +37,12 @@ function App() {
     if (currentUser) {
       setUser(currentUser);
       // Load user's tasks
-      const savedTasks = JSON.parse(localStorage.getItem(`tasks_${currentUser.id}`)) || [];
-      setTasks(savedTasks);
+      UserService.getUserTasks().then(savedTasks => {
+        setTasks(savedTasks);
+      }).catch(error => {
+        console.error('Error loading tasks:', error);
+        setTasks([]);
+      });
     }
   }, []);
 
@@ -53,18 +58,39 @@ function App() {
     }
   }, []);
 
+  useEffect(() => {
+    // Initialize notification service
+    const initNotifications = async () => {
+      const hasPermission = await NotificationService.checkPermission();
+      if (!hasPermission) {
+        console.log('Notification permission not granted');
+      }
+    };
+    initNotifications();
+  }, []);
+
   const handleLogin = async (username, password) => {
-    const loggedInUser = UserService.login(username, password);
-    setUser(loggedInUser);
-    // Load user's tasks
-    const savedTasks = JSON.parse(localStorage.getItem(`tasks_${loggedInUser.id}`)) || [];
-    setTasks(savedTasks);
+    try {
+      const loggedInUser = await UserService.login(username, password);
+      setUser(loggedInUser);
+      // Load user's tasks
+      const savedTasks = await UserService.getUserTasks();
+      setTasks(savedTasks);
+    } catch (error) {
+      console.error('Login failed:', error);
+      throw error;
+    }
   };
 
   const handleRegister = async (username, password) => {
-    const newUser = UserService.register(username, password);
-    setUser(newUser);
-    setTasks([]); // Initialize empty tasks array for new user
+    try {
+      const newUser = await UserService.register(username, password);
+      setUser(newUser);
+      setTasks([]); // Initialize empty tasks array for new user
+    } catch (error) {
+      console.error('Registration failed:', error);
+      throw error;
+    }
   };
 
   const handleLogout = () => {
@@ -96,43 +122,55 @@ function App() {
   };
 
   const handleTaskComplete = async (taskId, completed) => {
-    // Update task completion status
-    const updatedTasks = tasks.map(task =>
-      task.id === taskId ? { ...task, completed } : task
-    );
-    setTasks(updatedTasks);
-    localStorage.setItem(`tasks_${user.id}`, JSON.stringify(updatedTasks));
+    try {
+      // Update task completion status
+      const updatedTasks = tasks.map(task =>
+        task.id === taskId ? { ...task, completed } : task
+      );
+      setTasks(updatedTasks);
+      await UserService.saveUserTasks(updatedTasks);
+    } catch (error) {
+      console.error('Error updating task:', error);
+    }
   };
 
   const handleTaskSubmit = async (taskData) => {
-    let updatedTasks;
-    if (selectedTask) {
-      // Update existing task
-      updatedTasks = tasks.map(task =>
-        task.id === selectedTask.id ? { ...task, ...taskData } : task
-      );
-    } else {
-      // Create new task
-      const newTask = {
-        id: Date.now().toString(),
-        ...taskData,
-        userId: user.id,
-        createdAt: new Date().toISOString()
-      };
-      updatedTasks = [...tasks, newTask];
+    try {
+      let updatedTasks;
+      if (selectedTask) {
+        // Update existing task
+        updatedTasks = tasks.map(task =>
+          task.id === selectedTask.id ? { ...task, ...taskData } : task
+        );
+      } else {
+        // Create new task
+        const newTask = {
+          id: Date.now().toString(),
+          ...taskData,
+          userId: user.id,
+          createdAt: new Date().toISOString()
+        };
+        updatedTasks = [...tasks, newTask];
+      }
+      setTasks(updatedTasks);
+      await UserService.saveUserTasks(updatedTasks);
+      setIsTaskFormOpen(false);
+      setSelectedTask(null);
+    } catch (error) {
+      console.error('Error saving task:', error);
     }
-    setTasks(updatedTasks);
-    localStorage.setItem(`tasks_${user.id}`, JSON.stringify(updatedTasks));
-    setIsTaskFormOpen(false);
-    setSelectedTask(null);
   };
 
   const handleTaskDelete = async (taskId) => {
-    const updatedTasks = tasks.filter(task => task.id !== taskId);
-    setTasks(updatedTasks);
-    localStorage.setItem(`tasks_${user.id}`, JSON.stringify(updatedTasks));
-    setIsTaskDetailsOpen(false);
-    setSelectedTask(null);
+    try {
+      const updatedTasks = tasks.filter(task => task.id !== taskId);
+      setTasks(updatedTasks);
+      await UserService.saveUserTasks(updatedTasks);
+      setIsTaskDetailsOpen(false);
+      setSelectedTask(null);
+    } catch (error) {
+      console.error('Error deleting task:', error);
+    }
   };
 
   const handleTaskImport = async (importedTasks) => {
@@ -144,7 +182,7 @@ function App() {
         createdAt: new Date().toISOString()
       }))];
       setTasks(updatedTasks);
-      localStorage.setItem(`tasks_${user.id}`, JSON.stringify(updatedTasks));
+      await UserService.saveUserTasks(updatedTasks);
     } catch (error) {
       console.error('Error importing tasks:', error);
     }
