@@ -1,0 +1,179 @@
+.task-notifications {
+  position: fixed;
+  bottom: var(--spacing-lg);
+  right: var(--spacing-lg);
+  background-color: var(--card-bg);
+  border-radius: var(--border-radius);
+  box-shadow: var(--shadow-lg);
+  min-width: 300px;
+  max-width: 400px;
+  z-index: 1000;
+}
+
+.notifications-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--spacing-sm) var(--spacing-md);
+  background-color: var(--surface-color);
+  border-radius: var(--border-radius) var(--border-radius) 0 0;
+  cursor: pointer;
+}
+
+.notification-count {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  background-color: var(--primary-color);
+  color: white;
+  border-radius: 50%;
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.notifications-list {
+  max-height: 400px;
+  overflow-y: auto;
+  padding: var(--spacing-sm);
+}
+
+.notification-item {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  padding: var(--spacing-sm);
+  background-color: var(--surface-color);
+  border-radius: var(--border-radius);
+  margin-bottom: var(--spacing-sm);
+  transition: transform 0.2s ease;
+}
+
+.notification-item:hover {
+  transform: translateX(-4px);
+}
+
+.notification-item.overdue {
+  border-left: 4px solid var(--error-color);
+}
+
+.notification-item.upcoming {
+  border-left: 4px solid var(--warning-color);
+}
+
+.notification-item.high {
+  background-color: var(--error-color-light);
+}
+
+.notification-item.medium {
+  background-color: var(--warning-color-light);
+}
+
+.notification-item.low {
+  background-color: var(--success-color-light);
+}
+
+.notification-content {
+  flex: 1;
+  cursor: pointer;
+}
+
+.notification-content h4 {
+  margin: 0 0 var(--spacing-xs) 0;
+  color: var(--text-color);
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.notification-details {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.notification-type {
+  font-size: 0.75rem;
+  font-weight: 500;
+  text-transform: uppercase;
+}
+
+.notification-item.overdue .notification-type {
+  color: var(--error-color);
+}
+
+.notification-item.upcoming .notification-type {
+  color: var(--warning-color);
+}
+
+.notification-time {
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+}
+
+.btn-icon {
+  background: none;
+  border: none;
+  color: var(--text-secondary);
+  font-size: 1rem;
+  cursor: pointer;
+  padding: 4px;
+  line-height: 1;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: background-color 0.2s ease;
+}
+
+.btn-icon:hover {
+  background-color: var(--hover-color);
+}
+
+/* Scrollbar styles */
+.notifications-list::-webkit-scrollbar {
+  width: 6px;
+}
+
+.notifications-list::-webkit-scrollbar-track {
+  background: var(--surface-color);
+  border-radius: 3px;
+}
+
+.notifications-list::-webkit-scrollbar-thumb {
+  background: var(--border-color);
+  border-radius: 3px;
+}
+
+.notifications-list::-webkit-scrollbar-thumb:hover {
+  background: var(--text-secondary);
+}
+
+/* Responsive styles */
+@media (max-width: 768px) {
+  .task-notifications {
+    bottom: var(--spacing-md);
+    right: var(--spacing-md);
+    left: var(--spacing-md);
+    max-width: none;
+  }
+}
+
+@media (max-width: 480px) {
+  .task-notifications {
+    bottom: 0;
+    right: 0;
+    left: 0;
+    border-radius: var(--border-radius) var(--border-radius) 0 0;
+  }
+
+  .notifications-header {
+    padding: var(--spacing-xs) var(--spacing-sm);
+  }
+
+  .notification-item {
+    padding: var(--spacing-xs);
+  }
+} 

@@ -1,0 +1,259 @@
+.task-card {
+  background-color: var(--card-bg);
+  border-radius: var(--border-radius);
+  box-shadow: 0 2px 4px var(--shadow-color);
+  margin-bottom: 12px;
+  transition: all var(--transition-speed);
+  overflow: hidden;
+}
+
+.task-card:hover {
+  box-shadow: 0 4px 8px var(--shadow-color);
+  transform: translateY(-2px);
+}
+
+.task-card.expanded {
+  box-shadow: 0 6px 12px var(--shadow-color);
+}
+
+.task-card.overdue {
+  border-right: 4px solid var(--danger-color) !important;
+}
+
+.task-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 16px;
+  cursor: pointer;
+}
+
+.task-checkbox {
+  width: 20px;
+  height: 20px;
+  margin-top: 2px;
+  cursor: pointer;
+  accent-color: var(--primary-color);
+}
+
+.task-title-container {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.task-title {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 500;
+  color: var(--text-color);
+  transition: color var(--transition-speed);
+}
+
+.task-title.completed {
+  text-decoration: line-through;
+  color: var(--text-secondary);
+}
+
+.overdue-badge {
+  background-color: var(--danger-color);
+  color: var(--on-error-color);
+  font-size: 12px;
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-weight: 500;
+}
+
+.task-meta {
+  display: flex;
+  gap: 12px;
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+
+.due-date {
+  color: var(--text-secondary);
+}
+
+.category,
+.priority {
+  font-weight: 500;
+  padding: 2px 8px;
+  border-radius: 12px;
+  background-color: var(--hover-bg);
+  transition: background-color var(--transition-speed);
+}
+
+.task-details {
+  padding: 0 16px 16px;
+  border-top: 1px solid var(--border-color);
+}
+
+.task-description {
+  margin: 12px 0;
+  color: var(--text-secondary);
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.task-actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.edit-button,
+.delete-button {
+  padding: 6px 12px;
+  border: none;
+  border-radius: var(--border-radius);
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color var(--transition-speed);
+}
+
+.edit-button {
+  background-color: var(--primary-color);
+  color: var(--on-primary-color);
+}
+
+.edit-button:hover {
+  background-color: var(--primary-hover);
+}
+
+.delete-button {
+  background-color: var(--danger-color);
+  color: var(--on-error-color);
+}
+
+.delete-button:hover {
+  background-color: var(--danger-hover);
+}
+
+/* Task Edit Form */
+.task-edit-form {
+  padding: 16px;
+}
+
+.task-title-input {
+  width: 100%;
+  padding: 8px 12px;
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius);
+  font-size: 16px;
+  margin-bottom: 12px;
+  background-color: var(--surface-color);
+  color: var(--text-color);
+}
+
+.task-description-input {
+  width: 100%;
+  padding: 8px 12px;
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius);
+  font-size: 14px;
+  min-height: 100px;
+  margin-bottom: 12px;
+  resize: vertical;
+  background-color: var(--surface-color);
+  color: var(--text-color);
+}
+
+.task-edit-controls {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.task-priority-select,
+.task-category-select,
+.task-date-input {
+  padding: 8px 12px;
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius);
+  font-size: 14px;
+  background-color: var(--surface-color);
+  color: var(--text-color);
+}
+
+.task-edit-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.save-button,
+.cancel-button {
+  padding: 8px 16px;
+  border: none;
+  border-radius: var(--border-radius);
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color var(--transition-speed);
+}
+
+.save-button {
+  background-color: var(--primary-color);
+  color: var(--on-primary-color);
+}
+
+.save-button:hover {
+  background-color: var(--primary-hover);
+}
+
+.cancel-button {
+  background-color: var(--surface-color);
+  color: var(--text-color);
+  border: 1px solid var(--border-color);
+}
+
+.cancel-button:hover {
+  background-color: var(--hover-bg);
+}
+
+/* Responsive styles */
+@media (max-width: 768px) {
+  .task-header {
+    padding: 12px;
+  }
+
+  .task-title {
+    font-size: 14px;
+  }
+
+  .task-meta {
+    font-size: 12px;
+  }
+
+  .task-edit-controls {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 480px) {
+  .task-header {
+    padding: 8px;
+  }
+
+  .task-checkbox {
+    width: 18px;
+    height: 18px;
+  }
+
+  .task-title {
+    font-size: 13px;
+  }
+
+  .task-meta {
+    font-size: 11px;
+  }
+
+  .edit-button,
+  .delete-button {
+    padding: 4px 8px;
+    font-size: 12px;
+  }
+} 

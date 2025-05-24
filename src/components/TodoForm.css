@@ -1,0 +1,114 @@
+/* src/components/TodoForm.css */
+.todo-form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  margin-bottom: 20px;
+  padding: 20px;
+  background-color: var(--card-bg);
+  border-radius: 8px;
+  box-shadow: 0 2px 4px var(--shadow-color);
+}
+
+.form-row {
+  display: flex;
+  gap: 15px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  flex: 1;
+}
+
+.form-group label {
+  font-size: 14px;
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+
+.todo-input {
+  padding: 12px;
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  font-size: 16px;
+  width: 100%;
+  background-color: var(--surface-color);
+  color: var(--text-color);
+  transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+.todo-input:focus {
+  outline: none;
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 2px rgba(25, 118, 210, 0.2);
+}
+
+.todo-textarea {
+  padding: 12px;
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  font-size: 16px;
+  width: 100%;
+  min-height: 100px;
+  resize: vertical;
+  background-color: var(--surface-color);
+  color: var(--text-color);
+  transition: border-color 0.3s, box-shadow 0.3s;
+  font-family: inherit;
+}
+
+.todo-textarea:focus {
+  outline: none;
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 2px rgba(25, 118, 210, 0.2);
+}
+
+.date-input,
+.time-input {
+  padding: 12px;
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  font-size: 16px;
+  width: 100%;
+  background-color: var(--surface-color);
+  color: var(--text-color);
+  transition: border-color 0.3s;
+}
+
+.category-select,
+.priority-select {
+  padding: 12px;
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  font-size: 16px;
+  width: 100%;
+  background-color: var(--surface-color);
+  color: var(--text-color);
+  transition: border-color 0.3s;
+  cursor: pointer;
+}
+
+.add-button {
+  background-color: var(--primary-color);
+  color: var(--on-primary-color);
+  border: none;
+  padding: 12px 20px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: 500;
+  transition: background-color 0.3s;
+  margin-top: 10px;
+}
+
+.add-button:hover {
+  background-color: var(--primary-hover);
+}
+
+.add-button:disabled {
+  background-color: var(--disabled-color);
+  cursor: not-allowed;
+}
+  

@@ -1,0 +1,241 @@
+.task-stats {
+  background-color: var(--card-bg);
+  border-radius: var(--border-radius);
+  box-shadow: var(--shadow-md);
+  padding: var(--spacing-lg);
+  margin-bottom: var(--spacing-lg);
+}
+
+.task-stats h2 {
+  margin: 0 0 var(--spacing-lg) 0;
+  color: var(--text-color);
+  font-size: 1.5rem;
+  font-weight: 500;
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: var(--spacing-lg);
+}
+
+.stat-card {
+  background-color: var(--surface-color);
+  border-radius: var(--border-radius);
+  padding: var(--spacing-md);
+  box-shadow: var(--shadow-sm);
+}
+
+.stat-card h3 {
+  margin: 0 0 var(--spacing-md) 0;
+  color: var(--text-color);
+  font-size: 1rem;
+  font-weight: 500;
+}
+
+.stat-value {
+  margin-bottom: var(--spacing-sm);
+}
+
+/* Completion Circle */
+.completion-circle {
+  position: relative;
+  width: 120px;
+  height: 120px;
+  margin: 0 auto;
+}
+
+.completion-chart {
+  transform: rotate(-90deg);
+}
+
+.completion-text {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 1.5rem;
+  font-weight: 500;
+  color: var(--text-color);
+}
+
+/* Status Bars */
+.status-bars {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+}
+
+.status-bar {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+}
+
+.status-label {
+  min-width: 80px;
+  color: var(--text-secondary);
+  font-size: 0.875rem;
+}
+
+.status-progress {
+  flex: 1;
+  height: 8px;
+  background-color: var(--surface-color);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.status-fill {
+  height: 100%;
+  border-radius: 4px;
+  transition: width 0.3s ease;
+}
+
+.status-fill.error {
+  background-color: var(--error-color);
+}
+
+.status-fill.warning {
+  background-color: var(--warning-color);
+}
+
+.status-count {
+  min-width: 40px;
+  text-align: right;
+  color: var(--text-secondary);
+  font-size: 0.875rem;
+}
+
+/* Category Chart */
+.category-chart {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+}
+
+.category-bar {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+}
+
+.category-label {
+  min-width: 100px;
+  color: var(--text-secondary);
+  font-size: 0.875rem;
+}
+
+.category-progress {
+  flex: 1;
+  height: 8px;
+  background-color: var(--surface-color);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.category-fill {
+  height: 100%;
+  background-color: var(--primary-color);
+  border-radius: 4px;
+  transition: width 0.3s ease;
+}
+
+.category-count {
+  min-width: 40px;
+  text-align: right;
+  color: var(--text-secondary);
+  font-size: 0.875rem;
+}
+
+/* Priority Chart */
+.priority-chart {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+}
+
+.priority-bar {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+}
+
+.priority-label {
+  min-width: 80px;
+  color: var(--text-secondary);
+  font-size: 0.875rem;
+}
+
+.priority-progress {
+  flex: 1;
+  height: 8px;
+  background-color: var(--surface-color);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.priority-fill {
+  height: 100%;
+  border-radius: 4px;
+  transition: width 0.3s ease;
+}
+
+.priority-fill.high {
+  background-color: var(--error-color);
+}
+
+.priority-fill.medium {
+  background-color: var(--warning-color);
+}
+
+.priority-fill.low {
+  background-color: var(--success-color);
+}
+
+.priority-count {
+  min-width: 40px;
+  text-align: right;
+  color: var(--text-secondary);
+  font-size: 0.875rem;
+}
+
+/* Responsive styles */
+@media (max-width: 768px) {
+  .stats-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .stat-card {
+    padding: var(--spacing-sm);
+  }
+
+  .completion-circle {
+    width: 100px;
+    height: 100px;
+  }
+
+  .completion-text {
+    font-size: 1.25rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .task-stats {
+    padding: var(--spacing-md);
+  }
+
+  .status-label,
+  .category-label,
+  .priority-label {
+    min-width: 70px;
+    font-size: 0.75rem;
+  }
+
+  .status-count,
+  .category-count,
+  .priority-count {
+    min-width: 30px;
+    font-size: 0.75rem;
+  }
+} 
